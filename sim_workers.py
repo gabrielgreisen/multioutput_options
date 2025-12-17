@@ -34,7 +34,7 @@ def simulation_worker(
         todays_date=todays_date,
         calendar=calendar,
         day_count=day_count,
-        engine_grid=(600, 1200, 500),
+        engine_grid=(900, 1500, 700),
         damping_steps=10,
         scheme="hundsdorfer",
         spot_init=205.0,
