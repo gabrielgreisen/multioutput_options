@@ -8,11 +8,19 @@ def run_parallel_simulation(
     OPTtype="call",
     chunk_size=5000,
     out_dir="simulation_output",
+    seed_base: int = 100_000
 ):
     os.makedirs(out_dir, exist_ok=True)
 
-    n_workers = max(1, os.cpu_count() - 3)
-    rows_per_worker = N_total // n_workers
+    slurm_cpus = os.environ.get("SLURM_CPUS_PER_TASK")
+    if slurm_cpus is not None:
+        n_workers = max(1, int(slurm_cpus))
+    else:
+        n_workers = max(1, os.cpu_count() - 3)
+    
+    base = N_total // n_workers
+    rem = N_total % n_workers
+    rows = [base + (1 if i < rem else 0) for i in range(n_workers)]
 
     ctx = get_context("spawn")  # safest for QuantLib
 
@@ -20,7 +28,7 @@ def run_parallel_simulation(
         pool.starmap(
             simulation_worker,
             [
-                (wid, rows_per_worker, OPTtype, chunk_size, out_dir, 100_000)
+                (wid, rows[wid], OPTtype, chunk_size, out_dir, seed_base)
                 for wid in range(n_workers)
             ],
         )

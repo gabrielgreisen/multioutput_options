@@ -46,6 +46,7 @@ def simulation_worker(
     chunk_id = 0
 
     for i in range(n_rows):
+        start_time = time.perf_counter()
         S = 205.0
         K = rng.uniform(5, 405)
         q = rng.uniform(0.00, 0.06)
@@ -67,6 +68,7 @@ def simulation_worker(
             "price_american": price,
         })
         end_time = time.perf_counter()
+        print(f"time per run{i}: {end_time-start_time}")
 
         if (i + 1) % chunk_size == 0 or (i + 1) == n_rows:
             df = pd.DataFrame(buffer)
