@@ -13,7 +13,7 @@ def run_parallel_simulation(
     out_dir: str = "simulation_output",
     seed_base: int = 100_000,
     n_workers: int = 0,       # 0 = auto (SLURM-aware)
-    max_workers: int = 8,     # ICC-safe default; bump to 12/16 after stable
+    max_workers: int = 24,     # ICC-safe default; bump to 12/16 after stable
 ):
     os.makedirs(out_dir, exist_ok=True)
 
@@ -60,7 +60,7 @@ def main():
     p.add_argument("--out_dir", type=str, default="simulation_output", help="Output directory for parquet files.")
     p.add_argument("--seed_base", type=int, default=100_000, help="Base seed for RNG (worker seeds derived from this).")
     p.add_argument("--n_workers", type=int, default=0, help="Override worker count (0 = auto).")
-    p.add_argument("--max_workers", type=int, default=8, help="Cap workers even if SLURM allocates more CPUs.")
+    p.add_argument("--max_workers", type=int, default=24, help="Cap workers even if SLURM allocates more CPUs.")
 
     args = p.parse_args()
 
